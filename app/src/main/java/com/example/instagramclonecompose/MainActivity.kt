@@ -28,6 +28,7 @@ import com.example.instagramclonecompose.ui.theme.InstagramCloneComposeTheme
 import com.example.instagramclonecompose.uiux.AccountScreen
 import com.example.instagramclonecompose.uiux.AddScreen
 import com.example.instagramclonecompose.uiux.BottomNavigation
+import com.example.instagramclonecompose.uiux.ChatScreen
 import com.example.instagramclonecompose.uiux.EditProfileScreen
 import com.example.instagramclonecompose.uiux.FypScreen
 import com.example.instagramclonecompose.uiux.HomeScreen
@@ -63,7 +64,7 @@ class MainActivity : ComponentActivity() {
                             AccountScreen(navController)
                         }
                         composable("Chat"){
-
+                            ChatScreen(navController)
                         }
                         composable("EditProfile"){
                             EditProfileScreen(navController)

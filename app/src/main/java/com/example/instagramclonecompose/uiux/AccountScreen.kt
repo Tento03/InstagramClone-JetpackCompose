@@ -15,9 +15,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,9 +37,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.instagramclonecompose.R
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun AccountScreen(navController: NavController, modifier: Modifier = Modifier) {
+    var isOpened by remember { mutableStateOf(false) }
 
     Column(modifier.padding(16.dp)) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -96,7 +100,46 @@ fun AccountScreen(navController: NavController, modifier: Modifier = Modifier) {
                 ) {
                     Text("Share Profile")
                 }
+                Button(
+                    onClick = {
+                        isOpened=true},
+                    colors = ButtonDefaults.buttonColors(Color.Gray),
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    shape = RoundedCornerShape(0.dp)
+                ) {
+                    Text("Log Out")
+                }
             }
+        }
+
+        if (isOpened){
+            AlertDialog(
+                onDismissRequest = {isOpened=false},
+                title = { Text("Warning") },
+                text = { Text("Are You Sure To Log Out?") },
+                confirmButton = {
+                    TextButton(onClick = {
+                        val firebaseAuth=FirebaseAuth.getInstance()
+                        firebaseAuth.signOut()
+                        navController.navigate("Login"){
+                            popUpTo(navController.graph.startDestinationId){
+                                inclusive=true
+                            }
+                        }
+                    }) {
+                        Text("Confirm", color = Color.Blue)
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = {
+                        isOpened=false
+                    }) {
+                        Text("Cancel", color = Color.Red)
+                    }
+                }
+            )
         }
     }
 }

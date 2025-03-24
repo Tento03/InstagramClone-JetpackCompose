@@ -5,7 +5,7 @@ plugins {
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     id("kotlin-parcelize")
-
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -73,4 +73,9 @@ dependencies {
     kapt ("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
     implementation ("com.google.code.gson:gson:2.8.8")
+    implementation(platform("com.google.firebase:firebase-bom:33.10.0"))
+    implementation ("com.google.firebase:firebase-auth-ktx:23.2.0")
+    implementation ("com.google.firebase:firebase-database-ktx:21.0.0")
+    implementation ("com.google.firebase:firebase-storage-ktx:21.0.1")
+    implementation ("com.google.firebase:firebase-messaging:24.1.0")
 }

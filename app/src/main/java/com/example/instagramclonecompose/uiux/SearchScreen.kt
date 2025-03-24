@@ -1,5 +1,6 @@
 package com.example.instagramclonecompose.uiux
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,34 +32,40 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.instagramclonecompose.R
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun SearchScreen(navController: NavController,modifier: Modifier = Modifier) {
     var query by remember { mutableStateOf("") }
     val keyboardController= LocalSoftwareKeyboardController.current
 
-    Column(modifier.padding(8.dp)) {
-        OutlinedTextField(
-            value = query,
-            onValueChange = {
-                query=it
-            },
-            modifier.fillMaxWidth().padding(4.dp),
-            keyboardOptions = KeyboardOptions(
-                imeAction = ImeAction.Search
-            ),
-            keyboardActions = KeyboardActions(
-                onSearch = {
-                    keyboardController?.hide()
+    Scaffold(
+        bottomBar = { BottomNavigation(navController) }
+    ) {
+        Column(modifier.padding(4.dp)) {
+            OutlinedTextField(
+                value = query,
+                onValueChange = {
+                    query=it
+                },
+                modifier.fillMaxWidth().padding(4.dp),
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        keyboardController?.hide()
+                    }
+                ),
+                placeholder = { Text("Search") },
+                leadingIcon = { Icon(Icons.Default.Search,null) }
+            )
+            LazyColumn {
+                item {
+                    SearchCard()
                 }
-            ),
-            placeholder = { Text("Search") },
-            leadingIcon = { Icon(Icons.Default.Search,null) }
-        )
-        LazyColumn {
-            item {
-                SearchCard()
             }
         }
+
     }
 }
 

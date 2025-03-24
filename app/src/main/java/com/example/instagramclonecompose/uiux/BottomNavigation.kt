@@ -1,5 +1,6 @@
 package com.example.instagramclonecompose.uiux
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
@@ -48,7 +49,7 @@ fun BottomNavigation(navController: NavController,modifier: Modifier = Modifier)
                 },
                 label = {
                     Text(bottom.label)
-                },
+                }
             )
         }
     }

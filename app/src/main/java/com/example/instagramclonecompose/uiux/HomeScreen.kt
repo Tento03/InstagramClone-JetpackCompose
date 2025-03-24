@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -49,7 +50,7 @@ import com.example.instagramclonecompose.ui.theme.InstagramCloneComposeTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreen(navController: NavController,modifier: Modifier = Modifier) {
+fun HomeScreen(navController: NavController,paddingValues: PaddingValues,modifier: Modifier = Modifier) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -67,8 +68,11 @@ fun HomeScreen(navController: NavController,modifier: Modifier = Modifier) {
                 },
             )
         },
+        bottomBar = {
+            BottomNavigation(navController)
+        }
     ) {
-        LazyColumn(modifier.padding(8.dp)) {
+        LazyColumn(modifier.padding(it)) {
             item {
                 HomeCard(navController)
                 HomeCard(navController)

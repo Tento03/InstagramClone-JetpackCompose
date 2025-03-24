@@ -1,6 +1,7 @@
 package com.example.instagramclonecompose
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,10 +21,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.instagramclonecompose.auth.LoginScreen
+import com.example.instagramclonecompose.auth.RegisterScreen
 import com.example.instagramclonecompose.ui.theme.InstagramCloneComposeTheme
 import com.example.instagramclonecompose.uiux.AccountScreen
 import com.example.instagramclonecompose.uiux.AddScreen
@@ -44,12 +49,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             InstagramCloneComposeTheme {
                 val navController= rememberNavController()
+                val context= LocalContext.current
+                val isLogin= isLoggedIn(context)
                 Scaffold(
-                    bottomBar = { BottomNavigation(navController) }
-                ) {
-                    NavHost(navController, startDestination = "Home", modifier = Modifier.padding(it)){
+//                    bottomBar = { BottomNavigation(navController) }
+                ) {paddingValues->
+                    NavHost(navController, startDestination = if (isLogin) "Home" else "Login"
+                        , modifier = Modifier.padding(paddingValues)){
                         composable("Home"){
-                            HomeScreen(navController)
+                            HomeScreen(navController, paddingValues = paddingValues)
                         }
                         composable("Search"){
                             SearchScreen(navController)
@@ -69,6 +77,12 @@ class MainActivity : ComponentActivity() {
                         composable("EditProfile"){
                             EditProfileScreen(navController)
                         }
+                        composable("Login"){
+                            LoginScreen(navController)
+                        }
+                        composable("Register"){
+                            RegisterScreen(navController)
+                        }
                     }
                 }
             }
@@ -76,6 +90,10 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+fun isLoggedIn(context: Context):Boolean{
+    val sharedPreferences=context.getSharedPreferences("Login_Pref",Context.MODE_PRIVATE)
+    return sharedPreferences.getBoolean("isLogin",false)
+}
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(

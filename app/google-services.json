@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "854119940411",
+    "project_id": "instaclone-a83e4",
+    "storage_bucket": "instaclone-a83e4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:854119940411:android:1a27e05290f6002710f71e",
+        "android_client_info": {
+          "package_name": "com.example.instagramclonecompose"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBd2cgIEAnl6WPvjWNaGdvjx8U4i8Gamlk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

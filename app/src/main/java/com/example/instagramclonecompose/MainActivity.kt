@@ -24,9 +24,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.instagramclonecompose.auth.LoginScreen
 import com.example.instagramclonecompose.auth.RegisterScreen
 import com.example.instagramclonecompose.ui.theme.InstagramCloneComposeTheme
@@ -39,6 +41,7 @@ import com.example.instagramclonecompose.uiux.FypScreen
 import com.example.instagramclonecompose.uiux.HomeScreen
 import com.example.instagramclonecompose.uiux.SearchCard
 import com.example.instagramclonecompose.uiux.SearchScreen
+import com.example.instagramclonecompose.uiux.UserScreen
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -71,8 +74,18 @@ class MainActivity : ComponentActivity() {
                         composable("Account"){
                             AccountScreen(navController)
                         }
-                        composable("Chat"){
-                            ChatScreen(navController)
+                        composable("User"){
+                            UserScreen(navController)
+                        }
+                        composable("Chat/{idSender}",
+                            arguments = listOf(navArgument("idSender",{
+                                type=NavType.StringType
+                            }))
+                        ){
+                            val idSender=it.arguments?.getString("idSender")
+                            if (idSender != null) {
+                                ChatScreen(navController,idSender)
+                            }
                         }
                         composable("EditProfile"){
                             EditProfileScreen(navController)

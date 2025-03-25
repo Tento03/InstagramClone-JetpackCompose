@@ -62,7 +62,7 @@ fun HomeScreen(navController: NavController,paddingValues: PaddingValues,modifie
                         Icon(Icons.Outlined.FavoriteBorder,null)
                     }
                     IconButton(
-                        onClick = {navController.navigate("Chat")}) {
+                        onClick = {navController.navigate("User")}) {
                         Icon(Icons.Filled.Send,null)
                     }
                 },

@@ -197,7 +197,7 @@ fun RegisterScreen(navController: NavController) {
                                     if (it.isSuccessful){
                                         val id=firebaseAuth.currentUser?.uid
                                         if (id!=null){
-                                            val user= User(id,username,email,passHash, gender)
+                                            val user= User(id,username,email,passHash, gender,"")
                                             firebaseDatabase.child(id).setValue(user)
                                             navController.navigate("Login")
                                             Toast.makeText(context,"Register Success",Toast.LENGTH_SHORT).show()

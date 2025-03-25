@@ -55,15 +55,67 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.instagramclonecompose.R
+import com.example.instagramclonecompose.model.User
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 @Composable
 fun AccountScreen(navController: NavController, modifier: Modifier = Modifier) {
     var isOpened by remember { mutableStateOf(false) }
+    val firebaseAuth=FirebaseAuth.getInstance()
+    val uid=firebaseAuth.currentUser?.uid
+    var username by remember { mutableStateOf("") }
+    var followingList by remember { mutableStateOf(0) }
+    var followersList by remember { mutableStateOf(0) }
+    val userDatabase=FirebaseDatabase.getInstance().getReference("user").child(uid!!)
+        .addListenerForSingleValueEvent(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()){
+                    var user=snapshot.getValue(User::class.java)
+                    if (user!=null){
+                        username=user.username
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    val followingRef=FirebaseDatabase.getInstance().getReference("Follow")
+        .child(uid).child("Followings").addListenerForSingleValueEvent(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()){
+                    followingList=snapshot.childrenCount.toInt()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
+    val followersRef=FirebaseDatabase.getInstance().getReference("Follow")
+        .child(uid).child("Followers").addListenerForSingleValueEvent(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()){
+                    followersList=snapshot.childrenCount.toInt()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+
+        })
 
     Column(modifier.padding(16.dp)) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("Username", textAlign = TextAlign.Center, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+            Text(username, textAlign = TextAlign.Center, fontWeight = FontWeight.Bold, fontSize = 20.sp)
         }
         Row(
             modifier = Modifier.padding(15.dp),
@@ -81,11 +133,11 @@ fun AccountScreen(navController: NavController, modifier: Modifier = Modifier) {
                 Text("Post")
             }
             Column(modifier = Modifier.padding(2.dp), verticalArrangement = Arrangement.SpaceBetween) {
-                Text("100")
+                Text(followersList.toString())
                 Text("Followers")
             }
             Column(modifier = Modifier.padding(2.dp), verticalArrangement = Arrangement.SpaceBetween) {
-                Text("100")
+                Text(followingList.toString())
                 Text("Followings")
             }
         }

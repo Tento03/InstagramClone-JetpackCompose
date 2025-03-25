@@ -37,6 +37,7 @@ import com.example.instagramclonecompose.uiux.AddScreen
 import com.example.instagramclonecompose.uiux.BottomNavigation
 import com.example.instagramclonecompose.uiux.ChatScreen
 import com.example.instagramclonecompose.uiux.EditProfileScreen
+import com.example.instagramclonecompose.uiux.FollowScreen
 import com.example.instagramclonecompose.uiux.FypScreen
 import com.example.instagramclonecompose.uiux.HomeScreen
 import com.example.instagramclonecompose.uiux.SearchCard
@@ -95,6 +96,16 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("Register"){
                             RegisterScreen(navController)
+                        }
+                        composable("Follow/{userId}",
+                            arguments = listOf(navArgument("userId",{
+                                type=NavType.StringType
+                            }))
+                        ){
+                            val userId=it.arguments?.getString("userId")
+                            if (userId != null) {
+                                FollowScreen(navController,userId)
+                            }
                         }
                     }
                 }

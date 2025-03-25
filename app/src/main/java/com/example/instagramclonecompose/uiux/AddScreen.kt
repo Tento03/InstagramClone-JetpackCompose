@@ -33,6 +33,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.instagramclonecompose.R
 import com.example.instagramclonecompose.model.Post
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
@@ -106,7 +107,8 @@ fun AddScreen(navController: NavController,modifier: Modifier = Modifier) {
                     )
                     Button(onClick = {
                         if (uid != null) {
-                            val post=Post(it.toString(),description)
+                            var imagePost=Uri.encode(it.toString())
+                            val post=Post(R.drawable.img.toString(),description)
                             firebaseDatabase.child(uid).child(time).setValue(post).addOnCompleteListener(){
                                 if (it.isSuccessful){
                                     Toast.makeText(context,"Uploaded",Toast.LENGTH_SHORT).show()

@@ -8,6 +8,7 @@ import android.os.Build
 import android.provider.MediaStore.Images.Media
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -15,12 +16,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -41,6 +45,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -49,7 +54,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -57,6 +64,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.instagramclonecompose.R
+import com.example.instagramclonecompose.model.Post
 import com.example.instagramclonecompose.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -259,7 +267,44 @@ fun ViewPager(navController: NavController,modifier: Modifier = Modifier) {
 
 @Composable
 fun PostScreen() {
+    val firebaseAuth=FirebaseAuth.getInstance()
+    val uid=firebaseAuth.currentUser?.uid
+    val firebaseDatabase=FirebaseDatabase.getInstance().getReference("Post")
+    val postList = remember { mutableStateListOf<Post>() }
+    if (uid != null) {
+        firebaseDatabase.child(uid).orderByChild("time").addListenerForSingleValueEvent(object :ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()){
+                    var post=snapshot.getValue(Post::class.java)
+                    if (post!=null){
+                        postList.add(post)
+                    }
+                }
+            }
 
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        })
+    }
+    LazyColumn(modifier = Modifier.padding(8.dp)) {
+        items(postList.chunked(3)){postList->
+            Row(horizontalArrangement = Arrangement.SpaceBetween) {
+                postList.forEach {
+                    Column(modifier = Modifier.padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center) {
+                        AsyncImage(
+                            model = it.image,contentDescription = null,
+                            modifier = Modifier.size(60.dp)
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(it.description, textAlign = TextAlign.Center)
+                    }
+                }
+            }
+        }
+    }
 }
 
 @Composable

@@ -29,11 +29,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.List
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -114,8 +116,13 @@ fun AccountScreen(navController: NavController, modifier: Modifier = Modifier) {
         })
 
     Column(modifier.padding(16.dp)) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(username, textAlign = TextAlign.Center, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            IconButton(onClick = {navController.navigate("Home")}) {
+                Icon(Icons.Outlined.ArrowBack,null)
+            }
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(username, textAlign = TextAlign.Center, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+            }
         }
         Row(
             modifier = Modifier.padding(15.dp),

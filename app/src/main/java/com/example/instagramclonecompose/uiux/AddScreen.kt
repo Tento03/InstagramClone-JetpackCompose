@@ -10,6 +10,7 @@ import androidx.compose.ui.platform.LocalContext
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore.Images.Media
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -31,6 +33,12 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.instagramclonecompose.model.Post
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 @Composable
 fun AddScreen(navController: NavController,modifier: Modifier = Modifier) {
@@ -63,6 +71,10 @@ fun AddScreen(navController: NavController,modifier: Modifier = Modifier) {
             bitmap=it
         }
     }
+    val firebaseAuth=FirebaseAuth.getInstance()
+    val uid=firebaseAuth.currentUser?.uid
+    val firebaseDatabase=FirebaseDatabase.getInstance().getReference("Post")
+    val time = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Calendar.getInstance().time)
 
     LazyColumn {
         item{
@@ -92,6 +104,19 @@ fun AddScreen(navController: NavController,modifier: Modifier = Modifier) {
                         modifier = Modifier.fillMaxWidth().padding(4.dp),
                         enabled = if (bitmap!=null) true else false,
                     )
+                    Button(onClick = {
+                        if (uid != null) {
+                            val post=Post(it.toString(),description)
+                            firebaseDatabase.child(uid).child(time).setValue(post).addOnCompleteListener(){
+                                if (it.isSuccessful){
+                                    Toast.makeText(context,"Uploaded",Toast.LENGTH_SHORT).show()
+                                    navController.navigate("Home")
+                                }
+                            }
+                        }
+                    }, modifier = modifier.fillMaxWidth().padding(8.dp), shape = RoundedCornerShape(0.dp)) {
+                        Text("Upload")
+                    }
                 }
             }
 

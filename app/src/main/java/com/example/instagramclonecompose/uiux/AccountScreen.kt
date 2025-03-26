@@ -267,45 +267,64 @@ fun ViewPager(navController: NavController,modifier: Modifier = Modifier) {
 
 @Composable
 fun PostScreen() {
-    val firebaseAuth=FirebaseAuth.getInstance()
-    val uid=firebaseAuth.currentUser?.uid
-    val firebaseDatabase=FirebaseDatabase.getInstance().getReference("Post")
+    val firebaseAuth = FirebaseAuth.getInstance()
+    val uid = firebaseAuth.currentUser?.uid
+    val firebaseDatabase = FirebaseDatabase.getInstance().getReference("Post")
     val postList = remember { mutableStateListOf<Post>() }
+
     if (uid != null) {
-        firebaseDatabase.child(uid).orderByChild("time").addListenerForSingleValueEvent(object :ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()){
-                    var post=snapshot.getValue(Post::class.java)
-                    if (post!=null){
-                        postList.add(post)
+        firebaseDatabase.child(uid).orderByChild("time")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        for (i in snapshot.children) {
+                            val post = i.getValue(Post::class.java)
+                            if (post != null) {
+                                postList.add(post)
+                            }
+                        }
                     }
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
+                override fun onCancelled(error: DatabaseError) {
 
-            }
-        })
+                }
+            })
     }
-    LazyColumn(modifier = Modifier.padding(8.dp)) {
-        items(postList.chunked(3)){postList->
-            Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                postList.forEach {
-                    Column(modifier = Modifier.padding(16.dp),
+
+    LazyColumn(modifier = Modifier
+        .fillMaxWidth()
+        .padding(8.dp)
+    ) {
+        items(postList.chunked(2)) { postList ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                postList.forEach { post ->
+                    Column(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .weight(1f),
                         horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center) {
+                        verticalArrangement = Arrangement.Center
+                    ) {
                         AsyncImage(
-                            model = it.image,contentDescription = null,
+                            model = post.image,
+                            contentDescription = null,
                             modifier = Modifier.size(60.dp)
                         )
                         Spacer(modifier = Modifier.height(8.dp))
-                        Text(it.description, textAlign = TextAlign.Center)
+                        Text(post.description, textAlign = TextAlign.Center)
                     }
                 }
             }
         }
     }
 }
+
 
 @Composable
 fun TagScreen() {

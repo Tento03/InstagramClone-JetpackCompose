@@ -51,9 +51,9 @@ fun SearchScreen(navController: NavController,modifier: Modifier = Modifier) {
     val userList=remember{ mutableStateListOf<User>() }
     val firebaseDatabase=FirebaseDatabase.getInstance().getReference("user")
     firebaseDatabase
-        .orderByChild("username")
         .startAt(query)
         .endAt(query + "\uf8ff")
+        .orderByChild("username")
         .addListenerForSingleValueEvent(object :ValueEventListener{
         override fun onDataChange(snapshot: DataSnapshot) {
             if (snapshot.exists()){

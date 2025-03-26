@@ -108,7 +108,7 @@ fun AddScreen(navController: NavController,modifier: Modifier = Modifier) {
                     Button(onClick = {
                         if (uid != null) {
                             var imagePost=Uri.encode(it.toString())
-                            val post=Post(R.drawable.img.toString(),description)
+                            val post=Post(imagePost,description,time)
                             firebaseDatabase.child(uid).child(time).setValue(post).addOnCompleteListener(){
                                 if (it.isSuccessful){
                                     Toast.makeText(context,"Uploaded",Toast.LENGTH_SHORT).show()
